@@ -1,95 +1,76 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+
+import { useState, useRef } from 'react';
+import Movie from "./movie"
+import Star from "./images/star.png"
 
 export default function Home() {
+
+  const [movies, setMovies] = useState([])
+  const inputMovie = useRef();
+  const inputRating = useRef();
+  const clearForm = useRef();
+
+  const createMovie = (e) => {
+    e.preventDefault();
+    const newMovie = {
+      title: inputMovie.current.value,
+      rating: parseInt(inputRating.current.value)
+    };
+
+    inputMovie.current.value !== "" && inputRating.current.value !== "0" ? (
+      setMovies([...movies, newMovie]), clearForm.current.reset()
+    ) : (
+      alert("Du måste ange både titel och betyg!")
+    );
+  };
+
+  const insertStars = (rating) => {
+    const stars = [];
+
+    for (let i = 0; i < rating; i++) {
+      stars.push(<img src={Star.src} alt="Star" />);
+    } return stars;
+  };
+
+  const deleteMovie = (moviePosition) => {
+    const newMovie = [...movies];
+    newMovie.splice(moviePosition, 1);
+    setMovies(newMovie);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <div>
+      <h1>Min filmlista</h1>
+      <form ref={clearForm}>
+        <fieldset>
+          <legend>Lägg till en film</legend>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+          <label>Titel:</label>
+          <input ref={inputMovie} />
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+          <label>Betyg:</label>
+          <select ref={inputRating}>
+            <option value="0">Välj betyg här...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          <button onClick={createMovie}>Spara film</button>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+        </fieldset>
+      </form>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+      <hr />
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <ul id="movies">
+        {movies.map((movie, i) => {
+          return <Movie title={movie.title} index={i} rating={insertStars(movie.rating)} deleteMovie={deleteMovie} />
+        })}
+      </ul>
+
+    </div>
   );
-}
+};
