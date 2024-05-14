@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import Movie from "./movie"
 import Star from "./images/star.png"
+import Button from "./button"
 
 export default function Home() {
 
@@ -11,13 +12,14 @@ export default function Home() {
   const inputRating = useRef();
   const clearForm = useRef();
 
+  //Skapar nya filmer i filmlistan
   const createMovie = (e) => {
     e.preventDefault();
     const newMovie = {
       title: inputMovie.current.value,
       rating: parseInt(inputRating.current.value)
     };
-
+    //Kollar så att både titel och betyg är valt
     inputMovie.current.value !== "" && inputRating.current.value !== "0" ? (
       setMovies([...movies, newMovie]), clearForm.current.reset()
     ) : (
@@ -33,11 +35,20 @@ export default function Home() {
     } return stars;
   };
 
-  const deleteMovie = (moviePosition) => {
-    const newMovie = [...movies];
-    newMovie.splice(moviePosition, 1);
-    setMovies(newMovie);
+  const deleteMovie = (moviePosition) => { {
+      const newMovie = [...movies];
+      newMovie.splice(moviePosition, 1);
+      setMovies(newMovie);
+    }
   };
+  //Sorterar filmer i listan alfabetiskt
+  const sortMoviesAlphabetical = () => {
+    setMovies(prevMovies => [...prevMovies].sort((a, b) => a.title.localeCompare(b.title)));
+  }
+  //Sortera filmer i listan efter betyg
+  const sortMoviesGrade = () => {
+    setMovies(prevMovies => [...prevMovies].sort((a, b) => b.rating - a.rating));
+  }
 
   return (
     <div>
@@ -59,7 +70,8 @@ export default function Home() {
             <option value="5">5</option>
           </select>
           <button onClick={createMovie}>Spara film</button>
-
+          <Button onClick={sortMoviesAlphabetical}>Sortera alfabetiskt</Button>
+          <Button onClick={sortMoviesGrade}>Sortera efter betyg</Button>
         </fieldset>
       </form>
 
