@@ -2,7 +2,6 @@
 
 import { useState, useRef } from 'react';
 import Movie from "./movie"
-import Star from "./images/star.png"
 import Button from "./button"
 
 export default function Home() {
@@ -27,24 +26,18 @@ export default function Home() {
     );
   };
 
-  const insertStars = (rating) => {
-    const stars = [];
-
-    for (let i = 0; i < rating; i++) {
-      stars.push(<img src={Star.src} alt="Star" />);
-    } return stars;
-  };
-
   const deleteMovie = (moviePosition) => { {
       const newMovie = [...movies];
       newMovie.splice(moviePosition, 1);
       setMovies(newMovie);
     }
   };
+
   //Sorterar filmer i listan alfabetiskt
   const sortMoviesAlphabetical = () => {
     setMovies(prevMovies => [...prevMovies].sort((a, b) => a.title.localeCompare(b.title)));
   }
+  
   //Sortera filmer i listan efter betyg
   const sortMoviesGrade = () => {
     setMovies(prevMovies => [...prevMovies].sort((a, b) => b.rating - a.rating));
@@ -79,7 +72,7 @@ export default function Home() {
 
       <ul id="movies">
         {movies.map((movie, i) => {
-          return <Movie title={movie.title} index={i} rating={insertStars(movie.rating)} deleteMovie={deleteMovie} />
+          return <Movie title={movie.title} index={i} rating={movie.rating} deleteMovie={deleteMovie} />
         })}
       </ul>
 
