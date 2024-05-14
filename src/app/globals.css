@@ -3,6 +3,14 @@ body  {
   margin: auto;
 }
 
+fieldset > * {
+  margin: 0 0 0 5px;
+}
+
+fieldset > button {
+  margin: 0 0 0 15px;
+}
+
 #movies {
   margin: 0;
   padding: 0;
